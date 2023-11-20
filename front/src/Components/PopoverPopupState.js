@@ -6,9 +6,14 @@ import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import Cloud from "./Cloud";
 
 export default function BasicPopover(props) {
-  const popOverContent = props.popOverContent;
+  const { popOverContent, handleSearch, setInputValue } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
-
+  function handleSearchParent() {
+    handleSearch();
+  }
+  function setInputValueParent(tag) {
+    setInputValue(tag);
+  }
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -39,7 +44,12 @@ export default function BasicPopover(props) {
           horizontal: "left",
         }}
       >
-        <Cloud cloud={popOverContent}></Cloud>
+        <Cloud
+          handleSearch={handleSearchParent}
+          setInputValue={setInputValueParent}
+          handleClose={handleClose}
+          cloud={popOverContent}
+        ></Cloud>
       </Popover>
     </div>
   );

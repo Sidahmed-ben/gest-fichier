@@ -3,6 +3,10 @@ import { TagCloud } from "react-tagcloud";
 
 export default function Cloud(props) {
   const [data, setData] = useState([]);
+  const { handleClose, handleSearch, setInputValue } = props;
+  function cloudClicked(tag) {
+    handleClose();
+  }
 
   useEffect(() => {
     let cloud = props.cloud;
@@ -13,13 +17,17 @@ export default function Cloud(props) {
   }, []);
 
   return (
-    <div style={{ width: "500px", height: "500px", overflow: "scroll" }}>
+    <div style={{ width: "900px", height: "500px", overflow: "scroll" }}>
       <TagCloud
-        // width={200}
+        width={500}
         minSize={12}
         maxSize={50}
         tags={data}
-        onClick={(tag) => alert(`'${tag.value}' was selected!`)}
+        onClick={(tag) => {
+          cloudClicked(tag.value);
+          setInputValue(tag.value);
+          handleSearch();
+        }}
       />
     </div>
   );

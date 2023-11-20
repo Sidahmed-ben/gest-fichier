@@ -89,10 +89,11 @@ def search_word_db(db,word):
         # Search the frequency of the word appearence in each file 
         for row in text_freq:
             with open(row[0], 'r') as f:
+                print(row)
                 formatted_data.append({
                     'texte_title': row[0],
                     'frequences': row[1],
-                    'content': f.read(),
+                    # 'content': f.read(),
                 })
     # return the formated data
     return formatted_data

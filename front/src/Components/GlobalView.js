@@ -31,13 +31,19 @@ const Item = styled("div")(({ theme }) => ({
 
 export default function GloabView(props) {
   const [currentView, setCurrentView] = React.useState({});
-  const valueRef = React.useRef(""); //creating a refernce for TextField Component
+  const [inputValue, setInputValue] = React.useState("");
+  const handleChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  // const valueRef = React.useRef("bonjour"); //creating a refernce for TextField Component
   const [openSnackBar, setOpenSnackBar] = React.useState(false);
   const [viewTreeData, setViewTreeData] = React.useState({});
 
   // This function handles word searching
   const handleSearch = async () => {
-    const query = valueRef.current.value;
+    // console.log(inputValue);
+    const query = inputValue;
     console.log(query);
     try {
       if (query.length > 0) {
@@ -143,8 +149,9 @@ export default function GloabView(props) {
               <Grid item xs={10}>
                 <TextField
                   fullWidth
-                  inputRef={valueRef}
-                  label="Recherche"
+                  // inputRef={valueRef}
+                  value={inputValue}
+                  onChange={handleChange}
                   id="fullWidth"
                   size="small"
                   inputProps={{
@@ -194,7 +201,11 @@ export default function GloabView(props) {
           ></NewTreeView>
         </Grid>
         <Grid item xs={9}>
-          <DirectoryView currentView={currentView}></DirectoryView>
+          <DirectoryView
+            handleSearch={handleSearch}
+            currentView={currentView}
+            setInputValue={setInputValue}
+          ></DirectoryView>
         </Grid>
       </Grid>
     </div>

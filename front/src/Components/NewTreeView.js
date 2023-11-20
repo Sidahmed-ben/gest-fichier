@@ -10,8 +10,8 @@ import FolderIcon from "@mui/icons-material/Folder";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import HtmlOutlinedIcon from "@mui/icons-material/HtmlOutlined";
 import Typography from "@mui/joy/Typography";
-
-// psql -h localhost -d tp_tooken_db -U tooken_user -W
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import ArticleIcon from "@mui/icons-material/Article"; // psql -h localhost -d tp_tooken_db -U tooken_user -W
 
 export default function NewTreeView(props) {
   let globalBoolInd = -1;
@@ -45,6 +45,18 @@ export default function NewTreeView(props) {
           <HtmlOutlinedIcon
             style={{ fontSize: "35px", color: "red" }}
           ></HtmlOutlinedIcon>
+        );
+      case "pdf":
+        return (
+          <PictureAsPdfIcon
+            style={{ fontSize: "35px", color: "red" }}
+          ></PictureAsPdfIcon>
+        );
+      case "docx":
+        return (
+          <ArticleIcon
+            style={{ fontSize: "35px", color: "#0000CD" }}
+          ></ArticleIcon>
         );
       default:
         return (

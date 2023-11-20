@@ -5,10 +5,13 @@ import Grid from "@mui/material/Grid";
 import CardFD from "./CardFD";
 
 function DirectoryView(props) {
-  let data =
-    '{\n    ".": {\n        "files": [\n            "./files/test1.txt",\n            "./files/test3.pdf",\n            "./files/test2.txt"\n        ],\n        "subDir": {\n            "files": [\n                "./files/subDir/test1.txt",\n                "./files/subDir/test2.txt",\n                "./files/subDir/test3.txt"\n            ]\n        },\n        "subDir2": {\n            "files": [\n                "./files/subDir2/test1.txt",\n                "./files/subDir2/test2.txt",\n                "./files/subDir2/test3.txt"\n            ],\n            "subDir copy": {\n                "files": [\n                    "./files/subDir2/subDir copy/test1.txt",\n                    "./files/subDir2/subDir copy/test2.txt",\n                    "./files/subDir2/subDir copy/test3.txt"\n                ]\n            },\n            "subDir3": {\n                "files": [\n                    "./files/subDir2/subDir3/test1.txt",\n                    "./files/subDir2/subDir3/test2.txt",\n                    "./files/subDir2/subDir3/test3.txt"\n                ]\n            }\n        },\n        "subDir2 copy": {\n            "files": [\n                "./files/subDir2 copy/test1.txt",\n                "./files/subDir2 copy/test2.txt",\n                "./files/subDir2 copy/test3.txt"\n            ],\n            "subDir3": {\n                "files": [\n                    "./files/subDir2 copy/subDir3/test1.txt",\n                    "./files/subDir2 copy/subDir3/test2.txt",\n                    "./files/subDir2 copy/subDir3/test3.txt"\n                ]\n            }\n        }\n    }\n}';
-
-  const currentView = props.currentView;
+  const { currentView, handleSearch, setInputValue } = props;
+  function handleSearchParent() {
+    handleSearch();
+  }
+  function setInputValueParent(tag) {
+    setInputValue(tag);
+  }
   const Item = styled(Paper)(() => ({
     // backgroundColor: "#98d6a9",
     // padding: 8,
@@ -44,6 +47,8 @@ function DirectoryView(props) {
                   cardName={file["path"]}
                   cardType={"File"}
                   frequence={file["frequence"]}
+                  handleSearch={handleSearchParent}
+                  setInputValue={setInputValueParent}
                 ></CardFD>
               </Item>
             </Grid>
@@ -61,40 +66,7 @@ function DirectoryView(props) {
 
   return (
     <Grid container spacing={4}>
-      {/* <p>{currentView}</p> */}
       {displayFolderView()}
-      {/* 
-
-      <Grid item xs={1.5}>
-        <CardFD></CardFD>
-      </Grid>
-
-      <Grid item xs={1.5}>
-        <CardFD></CardFD>
-      </Grid>
-
-      <Grid item xs={1.5}>
-        <CardFD></CardFD>
-      </Grid>
-
-      <Grid item xs={1.5}>
-        <CardFD></CardFD>
-      </Grid>
-
-      <Grid item xs={1.5}>
-        <CardFD></CardFD>
-      </Grid>
-
-      <Grid item xs={1.5}>
-        <Item elevation={0}>
-          <CardFD></CardFD>
-        </Item>
-      </Grid>
-      <Grid item xs={1.5}>
-        <Item elevation={0}>
-          <CardFD></CardFD>
-        </Item>
-      </Grid> */}
     </Grid>
   );
 }

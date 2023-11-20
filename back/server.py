@@ -42,9 +42,6 @@ class motsUniquesTable(db.Model):
 
     
 
-    # mot_array = db.Column(db.String, nullable=True)
-
-
 
 # Define frequences table model
 class frequencesTable(db.Model):
@@ -101,8 +98,6 @@ def get_current_time():
         except Exception as e:
             print("Error in function save_mots_uniques ",str(e))
 
- 
-
     dir_tree = explorer_dossier(db,"./files")
     return { "./files": dir_tree }
 
@@ -122,6 +117,7 @@ def search_word():
     # Get the word to search 
     word_to_search = body["word"]
     try :
+        print(word_to_search)
         # Search for word 
         text_freq = search_word_db(db,word_to_search) 
     except Exception as e:
@@ -134,7 +130,8 @@ def search_word():
                 text["cloud"] = cloud
     except Exception as e:
         print("Error in function search_word ",str(e))
-
+    
+    text_freq = sorted(text_freq, key=lambda x: x["frequences"], reverse=True)
     return text_freq
 
 if __name__ == "__main__" :

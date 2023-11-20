@@ -1,6 +1,8 @@
 import os
 from dbHandler import get_text_cloud
 from bs4 import BeautifulSoup
+import subprocess
+import pypandoc
 
 
 # The function that reads files directory and returns 
@@ -25,6 +27,27 @@ def read_directory (directory_path):
                             'file_path': file_path,
                             'content': getHtmlContent(file),
                         })
+            elif file.endswith(".pdf"):
+                # Convert pdf to html
+                output_html = "./converted-html/output.html"
+                convert_pdf_to_html(file_path, output_html)
+                with open(output_html, 'r', encoding='utf-8') as file:
+                    file_content_list.append({
+                            'file_path': file_path,
+                            'content': getHtmlContent(file),
+                        })
+                delete_html_file(output_html)
+            elif file.endswith(".docx"):
+                # Convert pdf to html
+                output_html = "./converted-html/output.html"
+                convert_docx_to_html(file_path, output_html)
+                with open(output_html, 'r', encoding='utf-8') as file:
+                    file_content_list.append({
+                            'file_path': file_path,
+                            'content': getHtmlContent(file),
+                        })
+                # delete_html_file(output_html)
+
 
     return file_content_list
 
@@ -58,4 +81,25 @@ def explorer_dossier(db,chemin):
         return None
     
     
+
+def convert_docx_to_html(docx_path,output_html):
+    output = pypandoc.convert_file(docx_path, 'html')
+    with open(output_html, 'w') as file:
+        file.write(output)
+
+def convert_pdf_to_html(pdf_path, output_html):
+    try:
+        result = subprocess.run(['pdf2txt.py', '-o', output_html, pdf_path], stdout=subprocess.PIPE, text=True)
+        print(result.stdout)
+        print(" HTML file "+output_html +" created succeffully")
+    except subprocess.CalledProcessError as e:
+        print(f"Conversion failed. Error: {e}")
+
+
+
+def delete_html_file(html_path):
+    # Example 1: Run a simple shell command
+    result = subprocess.run(['rm', html_path], stdout=subprocess.PIPE, text=True)
+    print(result.stdout)
+    print(" HTML file "+ html_path +" deleted succeffully")
 
