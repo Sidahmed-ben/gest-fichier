@@ -4,9 +4,10 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import Cloud from "./Cloud";
+import Divider from "@mui/material/Divider";
 
 export default function BasicPopover(props) {
-  const { popOverContent, handleSearch, setInputValue } = props;
+  const { popOverContent, handleSearch, setInputValue, title, start } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
   function handleSearchParent() {
     handleSearch();
@@ -43,7 +44,12 @@ export default function BasicPopover(props) {
           vertical: "bottom",
           horizontal: "left",
         }}
+        style={{ width: "1000px", overflow: "visible" }}
       >
+        <h1 style={{ color: "blue" }}>{title}</h1>
+        <p style={{ fontSize: "25px" }}>{start}</p>
+        <Divider sx={{ bgcolor: "black" }} />
+
         <Cloud
           handleSearch={handleSearchParent}
           setInputValue={setInputValueParent}

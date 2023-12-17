@@ -97,11 +97,6 @@ export default function GloabView(props) {
     // console.log("Tree view : ", viewTreeData);
   };
 
-  // React.useEffect(() => {
-  //   if (query.length === 0) {
-  //   }
-  // }, [query]);
-
   const action = (
     <React.Fragment>
       <IconButton
@@ -205,6 +200,7 @@ export default function GloabView(props) {
             handleSearch={handleSearch}
             currentView={currentView}
             setInputValue={setInputValue}
+            setCurrentView={setCurrentView}
           ></DirectoryView>
         </Grid>
       </Grid>

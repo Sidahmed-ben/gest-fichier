@@ -1,10 +1,8 @@
-import pypandoc
+from autocorrect import Speller
 
-output = pypandoc.convert_file('file.docx', 'html')
-print(output)
-with open('example.html', 'w') as file:
-    # Write a string to the file
-    file.write(output)
-# output, errors = tidy_document(output)
-# with open("out.html", 'w') as f:
-#     f.write(output)
+spell = Speller(lang="fr")
+
+misspelled = ["mariege"]
+for word in misspelled:
+    print("original word: " + word)
+    print("corrected word: " + spell(word))

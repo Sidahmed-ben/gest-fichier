@@ -1,5 +1,5 @@
 import time
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, send_file
 import nltk
 from fileTookenizer import fileTookenizer
 from dbHandler import save_text
@@ -60,18 +60,17 @@ def get_current_time():
     # Empty tables
     try :
         delete_all_tables(db,textesTable,frequencesTable,motsUniquesTable) 
-        print()
     except Exception as e:
         print("Error in function delete_all_tables ",str(e))
 
     # Get the list of files with their contents and their paths 
     file_content_list = read_directory(root)
-    print(file_content_list)
+    # print(file_content_list)
     # For each file 
     for file in file_content_list :
         # Get the file path
         file_name = file["file_path"]
-        print(file_name)
+        # print(file_name)
         # Get the file content
         text = file["content"]  
         # Text tookenization
@@ -101,11 +100,6 @@ def get_current_time():
     dir_tree = explorer_dossier(db,"./files")
     return { "./files": dir_tree }
 
-    # return dir_tree
-
-
-    return mot_freq
-
 
 # Search for word frequences
 @app.route("/api/search_word", methods=['POST'])
@@ -117,7 +111,7 @@ def search_word():
     # Get the word to search 
     word_to_search = body["word"]
     try :
-        print(word_to_search)
+        # print(word_to_search)
         # Search for word 
         text_freq = search_word_db(db,word_to_search) 
     except Exception as e:
@@ -133,6 +127,15 @@ def search_word():
     
     text_freq = sorted(text_freq, key=lambda x: x["frequences"], reverse=True)
     return text_freq
+
+@app.route('/api/download-file', methods=['POST'])
+def download_file():
+    body = request.get_json()
+    filePath = body["path"]
+    return send_file(filePath, as_attachment=True)
+
+
+
 
 if __name__ == "__main__" :
     app.run(debug=True)

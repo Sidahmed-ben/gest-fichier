@@ -17,7 +17,14 @@ export default function Cloud(props) {
   }, []);
 
   return (
-    <div style={{ width: "900px", height: "500px", overflow: "scroll" }}>
+    <div
+      style={{
+        width: "900px",
+        height: "500px",
+        overflow: "auto",
+        marginTop: "20px",
+      }}
+    >
       <TagCloud
         width={500}
         minSize={12}

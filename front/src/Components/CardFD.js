@@ -66,6 +66,9 @@ const FolderCard = ({
   cardName,
   cloud,
   frequence,
+  path,
+  title,
+  start,
 }) => {
   function handleSearchParent() {
     handleSearch();
@@ -74,8 +77,56 @@ const FolderCard = ({
     setInputValue(tag);
   }
 
+  const downloadFile = async (path) => {
+    const extension = extract_extension(cardName);
+    // If not a folder
+    if (
+      extension !== "html" &&
+      extension !== "txt" &&
+      extension !== "pdf" &&
+      extension !== "docx"
+    ) {
+      return;
+    }
+
+    await fetch("/api/download-file", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ path }),
+    })
+      .then(async (resp) => {
+        // const result = await resp.json();
+        // console.log(result);
+        if (resp.ok) {
+          // Convert the response to blob
+          const blob = await resp.blob();
+          // Create a link element and trigger a download
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = extract_name_from_path(path); // Set desired file name
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        } else {
+          console.error("File download failed");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   return (
-    <Paper style={{ textAlign: "center", alignItems: "center" }}>
+    <Paper
+      onDoubleClickCapture={() => {
+        // onClick={() => {
+        downloadFile(path);
+      }}
+      style={{ textAlign: "center", alignItems: "center" }}
+    >
       {returnImageFD(cardName)}
       <Typography sx={{ fontSize: 21 }}>{cardName}</Typography>
       {cloud && (
@@ -83,6 +134,8 @@ const FolderCard = ({
           handleSearch={handleSearchParent}
           setInputValue={setInputValueParent}
           popOverContent={cloud}
+          title={title}
+          start={start}
         ></PopoverPopupState>
       )}
       {frequence && (
@@ -101,6 +154,10 @@ const CardFD = (props) => {
   const frequence = props.frequence || "";
   const handleSearch = props.handleSearch;
   const setInputValue = props.setInputValue;
+  const title = props.title;
+  const start = props.start;
+  console.log("title => ", title, "   ", cardName);
+  console.log("start => ", start, "   ", cardName);
 
   function handleSearchParent() {
     handleSearch();
@@ -124,6 +181,9 @@ const CardFD = (props) => {
         frequence={frequence}
         handleSearch={handleSearchParent}
         setInputValue={setInputValueParent}
+        path={cardName}
+        title={title}
+        start={start}
       />
     </Grid>
   );

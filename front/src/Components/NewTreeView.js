@@ -20,8 +20,8 @@ export default function NewTreeView(props) {
 
   const handleClick = (element) => {
     setCurrentView(element);
-    console.log(element);
-    console.log("clicked");
+    // console.log(element);
+    // console.log("clicked");
   };
 
   // useEffect(() => {
