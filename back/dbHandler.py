@@ -50,7 +50,7 @@ def save_mots_uniques(db,mots_uniques_table ,frequences_table,mot_freq_list, new
 
 
 # The function that empty all tables
-def delete_all_tables(db,textes_table,frequences_table,mots_uniques_table):
+def delete_all_tables(db,textes_table,frequences_table,mots_uniques_table,frequencesTable):
     # Empty frequence table
     db.session.query(frequences_table).delete()
     db.session.commit()
@@ -62,6 +62,9 @@ def delete_all_tables(db,textes_table,frequences_table,mots_uniques_table):
     # Empty mots_uniques table
     db.session.query(mots_uniques_table).delete()
     db.session.commit()
+
+    
+
 
     return 'All tables have been emptied!'
 

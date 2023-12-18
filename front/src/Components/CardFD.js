@@ -156,8 +156,8 @@ const CardFD = (props) => {
   const setInputValue = props.setInputValue;
   const title = props.title;
   const start = props.start;
-  console.log("title => ", title, "   ", cardName);
-  console.log("start => ", start, "   ", cardName);
+  // console.log("title => ", title, "   ", cardName);
+  // console.log("start => ", start, "   ", cardName);
 
   function handleSearchParent() {
     handleSearch();

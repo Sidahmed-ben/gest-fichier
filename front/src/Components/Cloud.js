@@ -11,7 +11,10 @@ export default function Cloud(props) {
   useEffect(() => {
     let cloud = props.cloud;
     cloud = cloud.map((element) => {
-      return { value: element[0], count: element[1] };
+      if (element[1] > 1) return { value: element[0], count: element[1] };
+      else {
+        return { value: "", count: 0 };
+      }
     });
     setData(cloud);
   }, []);

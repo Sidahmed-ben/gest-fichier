@@ -44,10 +44,13 @@ export default function BasicPopover(props) {
           vertical: "bottom",
           horizontal: "left",
         }}
-        style={{ width: "1000px", overflow: "visible" }}
+        style={{
+          width: "1000px",
+          overflow: "visible",
+        }}
       >
-        <h1 style={{ color: "blue" }}>{title}</h1>
-        <p style={{ fontSize: "25px" }}>{start}</p>
+        <h1 style={{ color: "blue", padding: "10px" }}>{title}</h1>
+        <p style={{ fontSize: "25px", padding: "10px" }}>{start}</p>
         <Divider sx={{ bgcolor: "black" }} />
 
         <Cloud

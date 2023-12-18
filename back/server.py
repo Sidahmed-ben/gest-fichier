@@ -1,5 +1,5 @@
 import time
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file,jsonify
 import nltk
 from fileTookenizer import fileTookenizer
 from dbHandler import save_text
@@ -13,6 +13,7 @@ import os
 nltk.download('punkt')
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import ARRAY
+from autocorrect import Speller
 
 
 app = Flask(__name__)
@@ -59,7 +60,7 @@ def get_current_time():
     root = './files'
     # Empty tables
     try :
-        delete_all_tables(db,textesTable,frequencesTable,motsUniquesTable) 
+        delete_all_tables(db,textesTable,frequencesTable,motsUniquesTable,frequencesTable) 
     except Exception as e:
         print("Error in function delete_all_tables ",str(e))
 
@@ -78,7 +79,7 @@ def get_current_time():
             # Get the list of words with their frequences
             mot_freq = fileTookenizer(text) 
             # print("###################################################")
-            # print( "We are working with the file => ", file, )
+            print( "We are working with the file => ", file["file_path"] )
             # print( "Word frequency  ",  mot_freq )
             # print("###################################################")
 
@@ -135,6 +136,21 @@ def download_file():
     return send_file(filePath, as_attachment=True)
 
 
+spell = Speller(lang="fr")
+@app.route('/api/verify-orthographe', methods=['POST'])
+def verify_orthographe():
+    body = request.get_json()
+    word = body["word"]
+    obj = {}
+    if(spell(word) != word):
+        obj["correct"] = False
+        obj["corrected_word"] = spell(word)
+
+    else :
+        obj["correct"] = True
+    
+    print(obj)
+    return  { "response": obj }
 
 
 if __name__ == "__main__" :

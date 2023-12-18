@@ -26,8 +26,6 @@ function DirectoryView(props) {
     let ind = 0;
     Object.keys(currentView).forEach((key, index1) => {
       const element = currentView[key];
-      // console.log(element);
-      // console.log(key);
       // si c'est un dossier
       if (!Array.isArray(element)) {
         itemsToRender.push(

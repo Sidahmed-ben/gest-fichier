@@ -15,7 +15,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import { dbApi } from "../hooks/dp_api";
 import NewTreeView from "./NewTreeView";
 import Typography from "@mui/joy/Typography";
-
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import Cloud from "./Cloud";
 
 const { searchWord, indexation } = dbApi();
@@ -32,8 +36,20 @@ const Item = styled("div")(({ theme }) => ({
 export default function GloabView(props) {
   const [currentView, setCurrentView] = React.useState({});
   const [inputValue, setInputValue] = React.useState("");
+  const [correctedInputValue, setCorrectedInputValue] = React.useState("");
+  const [alreadyChecked, setalreadyChecked] = React.useState(false);
+  // let correctedInputValue = "";
   const handleChange = (event) => {
     setInputValue(event.target.value);
+  };
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpen(false);
   };
 
   // const valueRef = React.useRef("bonjour"); //creating a refernce for TextField Component
@@ -47,24 +63,50 @@ export default function GloabView(props) {
     console.log(query);
     try {
       if (query.length > 0) {
-        searchWord(query)
-          .then((data) => {
-            const object = JSON5.parse(data);
-            if (object.length > 0) {
-              console.log(object);
-              const newView = { files: [] };
-              object.forEach((file) => {
-                newView.files.push({
-                  path: file["texte_title"],
-                  cloud: file["cloud"],
-                  frequence: file["frequences"],
+        //  Verify orthographe
+
+        await fetch("/api/verify-orthographe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            word: query,
+          }),
+        })
+          .then(async (resp) => {
+            const data = await resp.json();
+            console.log(data.response);
+            const { correct, corrected_word } = data.response;
+            if (correct || alreadyChecked) {
+              console.log("correct ! ");
+              searchWord(query)
+                .then((data) => {
+                  const object = JSON5.parse(data);
+                  if (object.length > 0) {
+                    console.log(object);
+                    const newView = { files: [] };
+                    object.forEach((file) => {
+                      newView.files.push({
+                        path: file["texte_title"],
+                        cloud: file["cloud"],
+                        frequence: file["frequences"],
+                      });
+                    });
+                    setCurrentView(newView);
+                  } else {
+                    setOpenSnackBar(true);
+                  }
+                  console.log(object);
+                  setalreadyChecked(false);
+                })
+                .catch((error) => {
+                  console.error(error);
                 });
-              });
-              setCurrentView(newView);
             } else {
-              setOpenSnackBar(true);
+              console.log("Not correct ! ");
+              setCorrectedInputValue(corrected_word);
+              // correctedInputValue = "hello";
+              handleClickOpen();
             }
-            console.log(object);
           })
           .catch((error) => {
             console.error(error);
@@ -112,7 +154,60 @@ export default function GloabView(props) {
 
   return (
     <div>
-      {" "}
+      <React.Fragment>
+        <Dialog
+          open={open}
+          onClose={handleCloseDialog}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+          fullWidth
+        >
+          <DialogTitle id="alert-dialog-title">Orthographe</DialogTitle>
+          <DialogContent>
+            <DialogContentText
+              style={{ fontSize: "20px" }}
+              id="alert-dialog-description"
+            >
+              Voulez-vous corriger
+              <Typography
+                style={{ fontSize: "20px" }}
+                display="inline"
+                fontWeight="bold"
+              >
+                &nbsp;{inputValue}&nbsp;
+              </Typography>
+              en&nbsp;
+              <Typography
+                style={{ fontSize: "20px" }}
+                display="inline"
+                fontWeight="bold"
+              >
+                {correctedInputValue}
+              </Typography>{" "}
+              ?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                setalreadyChecked(true);
+                handleCloseDialog();
+              }}
+            >
+              Non
+            </Button>
+            <Button
+              onClick={() => {
+                setInputValue(correctedInputValue);
+                handleCloseDialog();
+              }}
+              autoFocus
+            >
+              Oui
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </React.Fragment>{" "}
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Item>

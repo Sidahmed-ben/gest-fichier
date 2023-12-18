@@ -20,16 +20,7 @@ export default function NewTreeView(props) {
 
   const handleClick = (element) => {
     setCurrentView(element);
-    // console.log(element);
-    // console.log("clicked");
   };
-
-  // useEffect(() => {
-  //   setOpenStateFalse(jsonData);
-  //   // Initialize view
-  //   // setCurrentView(jsonData["./files"]);
-  //   setOpenList(updatedOpenList);
-  // }, [jsonData]);
 
   function getIcone(fineName) {
     const extension = extract_extension(fineName);
